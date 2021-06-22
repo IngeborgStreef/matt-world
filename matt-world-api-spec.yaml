@@ -1,0 +1,132 @@
+swagger: "2.0"
+info:
+  description: "It's a Matt world API"
+  version: "1.0.0"
+  title: "It's a Matt world"
+host: "matt-world.nl"
+basePath: "/api"
+
+schemes:
+  - "https"
+  - "http"
+paths:
+  /books:
+    post:
+      summary: "Add a new book"
+      operationId: "createBook"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Book object"
+          required: true
+          schema:
+            $ref: "#/definitions/Book"
+      responses:
+        "201":
+          description: "created"
+    get:
+      summary: "Read all book summaries"
+      operationId: "getAllBooks"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Book"
+          description: "OK"
+  /books/{id}:
+    get:
+      summary: "Get a single book"
+      operationId: "getBook"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          schema:
+            $ref: "#/definitions/Book"
+          description: "OK"
+        "404":
+          description: "Book not found"
+    put:
+      summary: "Update a book"
+      operationId: "updateBook"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          type: "string"
+        - name: "book"
+          in: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/Book"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      responses:
+        "202":
+          description: "Accepted"
+        "400":
+          description: "Bad request"
+        "404":
+          description: "Book not found"
+  /books/{id}/pages:
+    get:
+      summary: "Get a book's pages"
+      operationId: "getBookPages"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Page"
+          description: "OK"
+        "404":
+          description: "Book not found"
+#  /books/{id}/pages/{pageId}:
+definitions:
+  Book:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      level:
+        type: "integer"
+        format: "int64"
+  Page:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      pageNumber:
+        type: "integer"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      email:
+        type: "string"
+      password:
+        type: "string"

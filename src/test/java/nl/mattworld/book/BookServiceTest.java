@@ -27,7 +27,7 @@ public class BookServiceTest {
 
     @Test
     public void canListBooks() {
-        when(repositoryMock.findAll()).thenReturn(List.of(new Book("1", 1), new Book("2", 2)));
+        when(repositoryMock.findAll()).thenReturn(List.of(new Book(), new Book()));
         List<Book> books = service.retrieveBooks();
         assertEquals(2, books.size());
     }
@@ -35,7 +35,9 @@ public class BookServiceTest {
     @Test
     public void canFindBookById() {
         String id = "1";
-        when(repositoryMock.findOneById(id)).thenReturn(Optional.of(new Book(id, 1)));
+        Book book = new Book();
+        book.setId(id);
+        when(repositoryMock.findOneById(id)).thenReturn(Optional.of(book));
         Optional<Book> bookOptional = service.findBookById(id);
         assertTrue(bookOptional.isPresent());
         assertEquals(id, bookOptional.get().getId());
@@ -44,7 +46,7 @@ public class BookServiceTest {
     @Test
     public void canCreateBook() {
         String expectedId = "3";
-        Book testBook = new Book("3", 3);
+        Book testBook = new Book();
         when(repositoryMock.saveBook(testBook)).thenAnswer(inv -> {
             Book book = inv.getArgument(0);
             book.setId(expectedId);
@@ -57,22 +59,25 @@ public class BookServiceTest {
     @Test
     public void canFilterBooksByLevel() {
         int expectedLevel = 4;
-        when(repositoryMock.findByLevelGte(expectedLevel)).thenReturn(List.of(new Book("4", 4)));
+        Book book = new Book();
+        book.setLevel(expectedLevel);
+        when(repositoryMock.findByLevelGte(expectedLevel)).thenReturn(List.of(book));
         List<Book> booksFilteredByLevel = service.retrieveBookByMinimumLevel(expectedLevel);
         assertEquals(1, booksFilteredByLevel.size());
     }
 
-//    @Test
-//    public void canUpdateBookLevel() {
-//    }
+    @Test
+    public void canUpdateBookLevel() {
+        fail();
+    }
 
-//    @Test
-//    public void shouldFailOnUpdateNonExistingBook() {
-//        fail();
-//    }
+    @Test
+    public void shouldFailOnUpdateNonExistingBook() {
+        fail();
+    }
 
     @Test
     public void parentCanBuyBook() {
-
+        fail();
     }
 }
