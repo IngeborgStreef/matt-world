@@ -22,8 +22,8 @@ public class BookService {
         return repository.findOneById(id);
     }
 
-    public Book createBook(Book testBook) {
-        return repository.save(testBook);
+    public Book createBook(Book book) {
+        return repository.save(book);
     }
 
     public List<Book> retrieveBooksByMinimumLevel(int level) {
