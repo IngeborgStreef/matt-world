@@ -6,13 +6,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table (name = "BOOKS")
 public class Book {
     @Id
     @GeneratedValue (generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid4")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private int level;
     private String title;
@@ -68,5 +69,29 @@ public class Book {
 
     public void setSummery(String summery) {
         this.summery = summery;
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "id='" + id + '\'' +
+                ", level=" + level +
+                ", title='" + title + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", summery='" + summery + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return level == book.level && Objects.equals(id, book.id) && Objects.equals(title, book.title) && Objects.equals(imageUrl, book.imageUrl) && Objects.equals(summery, book.summery);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, level, title, imageUrl, summery);
     }
 }

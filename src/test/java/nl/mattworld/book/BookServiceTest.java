@@ -1,5 +1,6 @@
 package nl.mattworld.book;
 
+import nl.mattworld.exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BookServiceTest {
@@ -47,7 +48,7 @@ public class BookServiceTest {
     public void canCreateBook() {
         String expectedId = "3";
         Book testBook = new Book();
-        when(repositoryMock.saveBook(testBook)).thenAnswer(inv -> {
+        when(repositoryMock.save(testBook)).thenAnswer(inv -> {
             Book book = inv.getArgument(0);
             book.setId(expectedId);
             return book;
@@ -61,19 +62,39 @@ public class BookServiceTest {
         int expectedLevel = 4;
         Book book = new Book();
         book.setLevel(expectedLevel);
-        when(repositoryMock.findByLevelGte(expectedLevel)).thenReturn(List.of(book));
-        List<Book> booksFilteredByLevel = service.retrieveBookByMinimumLevel(expectedLevel);
+        when(repositoryMock.findByLevelIsGreaterThanEqual(expectedLevel)).thenReturn(List.of(book));
+        List<Book> booksFilteredByLevel = service.retrieveBooksByMinimumLevel(expectedLevel);
         assertEquals(1, booksFilteredByLevel.size());
     }
 
     @Test
     public void canUpdateBookLevel() {
-        fail();
+        Book book = new Book();
+        book.setLevel(1);
+        book.setId("1");
+        when(repositoryMock.existsById(book.getId())).thenReturn(true);
+        service.updateBook(book.getId(), book);
+        verify(repositoryMock).save(book);
     }
 
     @Test
     public void shouldFailOnUpdateNonExistingBook() {
-        fail();
+        Book book = new Book();
+        book.setId("1");
+        when(repositoryMock.existsById(book.getId())).thenReturn(false);
+        assertThrows(NotFoundException.class, () -> service.updateBook(book.getId(), book));
+        verify(repositoryMock, never()).save(book);
+    }
+
+    @Test
+    public void shouldNotOverwriteId(){
+        String id = "1";
+        Book book = new Book();
+        book.setId("NOT_1");
+        when(repositoryMock.existsById(id)).thenReturn(true);
+        service.updateBook(id,book);
+        book.setId(id);
+        verify(repositoryMock).save(book);
     }
 
     @Test
