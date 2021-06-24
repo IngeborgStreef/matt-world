@@ -20,6 +20,8 @@ public class Page {
     private int number;
 //    @Lob
 //    private List<Image> image;
+    //via inject??
+    //stastic map aanmaken --> 2. Using Spring Boot
 
     public static class Image {
         private String url;
