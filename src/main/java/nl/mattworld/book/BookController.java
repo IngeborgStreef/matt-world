@@ -26,4 +26,10 @@ public class BookController {
     public Book getBook(@PathVariable String id) {
         return bookService.findBookById(id).orElseThrow(()->new NotFoundException("Book not found by ID: " + id));
     }
+
+    @PutMapping("/api/books/{id}")
+    public void updateBook(@PathVariable String id, @RequestBody Book update) {
+        bookService.updateBook(id, update);
+    }
+
 }
