@@ -1,6 +1,7 @@
 package nl.mattworld.book;
 
 import nl.mattworld.exceptions.NotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Optional;
 public class BookService {
     private final BookRepository repository;
 
+    @Autowired
     public BookService(BookRepository repository) {
         this.repository = repository;
     }

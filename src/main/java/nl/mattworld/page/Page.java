@@ -11,22 +11,14 @@ import javax.persistence.Table;
 @Table (name = "PAGES")
 public class Page {
     @Id
-    @GeneratedValue (generator = "uuid")
+    @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String bookId;
     private String title;
     private String text;
     private int number;
-//    @Lob
-//    private List<Image> image;
-    //via inject??
-    //stastic map aanmaken --> 2. Using Spring Boot
-
-    public static class Image {
-        private String url;
-        private int position;
-    }
+    private String imageUrl;
 
     public String getId() {
         return id;
@@ -68,11 +60,11 @@ public class Page {
         this.number = number;
     }
 
-//    public List<Image> getImage() {
-//        return image;
-//    }
-//
-//    public void setImage(List<Image> image) {
-//        this.image = image;
-//    }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

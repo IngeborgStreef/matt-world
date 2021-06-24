@@ -26,8 +26,10 @@ paths:
           schema:
             $ref: "#/definitions/Book"
       responses:
-        "201":
-          description: "created"
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Book"
     get:
       summary: "Read all book summaries"
       operationId: "getAllBooks"
@@ -102,7 +104,48 @@ paths:
           description: "OK"
         "404":
           description: "Book not found"
-#  /books/{id}/pages/{pageId}:
+    post:
+      summary: "Create bookpage"
+      operationId: "createBookPage"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "Page object"
+          required: true
+          schema:
+            $ref: "#/definitions/Page"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Page"
+
+  /books/{id}/pages/{pageId}:
+    get:
+      summary: "Get single page"
+      operationId: "getPage"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          schema:
+            $ref: "#/definitions/Page"
+          description: "OK"
+        "404":
+          description: "Book or Page not found"
 definitions:
   Book:
     type: "object"
@@ -130,3 +173,5 @@ definitions:
         type: "string"
       password:
         type: "string"
+
+        #todo: spec rechttrekken naar implementatie
