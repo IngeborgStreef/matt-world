@@ -50,35 +50,11 @@ public class PageServiceIT {
         assertEquals(created, found.get());
     }
 
-
-
-//    @Test
-//    public void canFindPageByBookIdAndNumber() {
-//        String bookId = "1";
-//        int number = 1;
-//        Page page = new Page();
-//        page.setBookId(bookId);
-//        page.setNumber(number);
-//        when(repositoryMock.findOneByBookIdAndNumber(bookId, number)).thenReturn(Optional.of(page));
-//        Optional<Page> pageOptional = service.findPageByBookIdAndNumber(bookId, number);
-//        assertTrue(pageOptional.isPresent());
-//        assertEquals(bookId, pageOptional.get().getBookId());
-//        assertEquals(number, pageOptional.get().getNumber());
-//    }
-//
-//    @Test
-//    public void canCreatePage() {
-//        String expectedId = "3";
-//        Page testPage = new Page();
-//        when(repositoryMock.save(testPage)).thenAnswer(inv -> {
-//            Page page = inv.getArgument(0);
-//            page.setId(expectedId);
-//            return page;
-//        });
-//        Page created = service.createPage(testPage);
-//        assertEquals("3", created.getId());
-//    }
-//
-//}
-
+    @Test
+    public void canCreatePage() {
+        Page page = new Page();
+        Page created = service.createPage(page);
+        Page found = repository.findById(created.getId()).orElseThrow();
+        assertEquals(created, found);
+    }
 }

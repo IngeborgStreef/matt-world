@@ -65,6 +65,14 @@ public class BookServiceIT {
     }
 
     @Test
+    public void canCreateBook() {
+        Book book = new Book();
+        Book created = service.createBook(book);
+        Book found = repository.findById(created.getId()).orElseThrow();
+        assertEquals(created, found);
+    }
+
+    @Test
     public void canUpdateBookLevel() {
         Book book = new Book();
         book.setLevel(1);
