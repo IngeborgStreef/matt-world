@@ -32,7 +32,7 @@ public class PageServiceTest {
         assertEquals(2, pages.size());
     }
 
-    //todo: check if test is usefull. If so, finish. Else throw.
+    //todo: check if test is usefull. If so, finish (and add to IT tests). Else throw.
 //    @Test
 //    public void canListPagesPerBook() {
 //        Page pageOne = new Page();
