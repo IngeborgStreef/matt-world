@@ -1,7 +1,6 @@
 package nl.mattworld.book;
 
 import nl.mattworld.exceptions.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,8 +8,11 @@ import java.util.List;
 @RestController
 public class BookController {
 
-    @Autowired
-    private BookService bookService;
+    private final BookService bookService;
+
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @GetMapping("/api/books")
     public List<Book> getAllBooks() {

@@ -6,7 +6,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class PageServiceTest {
@@ -18,27 +22,64 @@ public class PageServiceTest {
 
     @BeforeEach
     public void setup() {
-        service= new PageService(repositoryMock);
+        service = new PageService(repositoryMock);
     }
 
     @Test
-    public void canListPagesPerBook() {
-        fail();
+    public void canListPages() {
+        when(repositoryMock.findAll()).thenReturn(List.of(new Page(), new Page()));
+        List<Page> pages = service.retrievePages();
+        assertEquals(2, pages.size());
     }
+
+    //todo: check if test is usefull. If so, finish. Else throw.
+//    @Test
+//    public void canListPagesPerBook() {
+//        Page pageOne = new Page();
+//        pageOne.setBookId("1");
+//        Page pageTwo = new Page();
+//        pageTwo.setBookId("2");
+//        when(repositoryMock.findAllByBookId("id")).thenReturn(List.of(pageOne, pageTwo));
+//        List<Page> bookPages = service.retrievePages();
+//        assertEquals(2, bookPages.size());
+//    }
 
     @Test
     public void canFindPageById() {
-        fail();
+        String id = "1";
+        Page page = new Page();
+        page.setId(id);
+        when(repositoryMock.findOneById(id)).thenReturn(Optional.of(page));
+        Optional<Page> pageOptional = service.findPageById(id);
+        assertTrue(pageOptional.isPresent());
+        assertEquals(id, pageOptional.get().getId());
     }
 
     @Test
     public void canFindPageByBookIdAndNumber() {
-        fail();
+        String bookId = "1";
+        int number = 1;
+        Page page = new Page();
+        page.setBookId(bookId);
+        page.setNumber(number);
+        when(repositoryMock.findOneByBookIdAndNumber(bookId, number)).thenReturn(Optional.of(page));
+        Optional<Page> pageOptional = service.findPageByBookIdAndNumber(bookId, number);
+        assertTrue(pageOptional.isPresent());
+        assertEquals(bookId, pageOptional.get().getBookId());
+        assertEquals(number, pageOptional.get().getNumber());
     }
 
     @Test
     public void canCreatePage() {
-        fail();
+        String expectedId = "3";
+        Page testPage = new Page();
+        when(repositoryMock.save(testPage)).thenAnswer(inv -> {
+            Page page = inv.getArgument(0);
+            page.setId(expectedId);
+            return page;
+        });
+        Page created = service.createPage(testPage);
+        assertEquals("3", created.getId());
     }
 
 }
