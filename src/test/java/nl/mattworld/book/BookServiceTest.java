@@ -97,6 +97,7 @@ public class BookServiceTest {
         verify(repositoryMock).save(book);
     }
 
+    //todo can be removed, will be part of purchase service
     @Test
     public void parentCanBuyBook() {
         fail();

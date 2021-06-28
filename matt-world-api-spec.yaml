@@ -137,6 +137,10 @@ paths:
           name: "id"
           required: true
           type: "string"
+        - in: "path"
+          name: "pageId"
+          required: true
+          type: "string"
       produces:
         - "application/json"
       responses:
@@ -146,6 +150,34 @@ paths:
           description: "OK"
         "404":
           description: "Book or Page not found"
+
+  /books/{id}/page/{pageNumber}:
+    get:
+      summary: "Get single page"
+      operationId: "getPage"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "pageNumber"
+          required: true
+          type: "string"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          schema:
+            $ref: "#/definitions/Page"
+          description: "OK"
+        "404":
+          description: "Book or Page not found"
+
+
+
+
+
 definitions:
   Book:
     type: "object"

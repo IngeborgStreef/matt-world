@@ -15,12 +15,13 @@ public class PageService {
         this.repository = repository;
     }
 
+    //todo: check if this function is still needed
     public List<Page> retrievePages() {
         return repository.findAll();
     }
 
-    public List<Page> listPagesPerBook() {
-        return repository.findAllByBookId("id");
+    public List<Page> listPagesPerBook(String bookId) {
+        return repository.findAllByBookId(bookId);
     }
 
     public Optional<Page> findPageById(String id) {
