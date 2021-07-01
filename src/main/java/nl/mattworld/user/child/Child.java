@@ -1,6 +1,7 @@
-package nl.mattworld.user;
+package nl.mattworld.user.child;
 
 import lombok.Data;
+import nl.mattworld.user.User;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -17,5 +18,5 @@ public class Child {
     private String name;
     private LocalDate dateOfBirth;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Parent parent;
+    private User parent;
 }

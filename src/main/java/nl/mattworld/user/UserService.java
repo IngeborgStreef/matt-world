@@ -1,7 +1,11 @@
 package nl.mattworld.user;
 
 import lombok.RequiredArgsConstructor;
+import nl.mattworld.exceptions.NoValidUserFoundException;
 import nl.mattworld.exceptions.NotFoundException;
+import nl.mattworld.exceptions.RoleUpdateNotAllowedException;
+import nl.mattworld.user.child.Child;
+import nl.mattworld.user.child.ChildRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,54 +15,42 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final AdminRepository adminRepository;
-    private final ParentRepository parentRepository;
+    private final UserRepository userRepository;
     private final ChildRepository childRepository;
 
-    public Admin createAdmin(Admin admin) {
-        return adminRepository.save(admin);
+    public User createUser(User user) {
+        return userRepository.save(user);
     }
-    public Parent createParent(Parent parent) {
-        return parentRepository.save(parent);
-    }
-    public Child createChild(Child child) {
+
+    public Child createChild(String userId, Child child) {
+        findById(userId).filter(user -> user.getRole() == User.Role.USER).orElseThrow(() -> new NoValidUserFoundException("User is not found or role is not valid"));
         return childRepository.save(child);
     }
 
-    public Optional<Admin> findAdminById(String id) {
-        return adminRepository.findById(id);
+    public Optional<User> findById(String id) {
+        return userRepository.findById(id);
     }
-    public Optional<Parent> findParentById(String id) {
-        return parentRepository.findById(id);
-    }
+
     public Optional<Child> findChildById(String id) {
         return childRepository.findById(id);
     }
 
-    public List<Admin> retrieveAllAdmins() {
-        return adminRepository.findAll();
+    public List<User> retrieveAll() {
+        return userRepository.findAll();
     }
-    public List<Parent> retrieveAllParents() {
-        return parentRepository.findAll();
-    }
+
     public List<Child> retrieveAllChildrenFromParent(String parentId) {
         return childRepository.findAllByParentId(parentId);
     }
 
-    public void updateAdmin(String id, Admin update) {
-        if (!adminRepository.existsById(id)) {
-            throw new NotFoundException("Unable to update. Admin not found by ID: " + id);
-        }
+    public void updateUser(String id, User update) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Unable to update. User not found by ID: " + id));
+        if (user.getRole() != update.getRole())
+            throw new RoleUpdateNotAllowedException("Role update not allowed");
         update.setId(id);
-        adminRepository.save(update);
+        userRepository.save(update);
     }
-    public void updateParent(String id, Parent update) {
-        if (!parentRepository.existsById(id)) {
-            throw new NotFoundException("Unable to update. Parent not found by ID: " + id);
-        }
-        update.setId(id);
-        parentRepository.save(update);
-    }
+
     public void updateChild(String id, Child update) {
         if (!childRepository.existsById(id)) {
             throw new NotFoundException("Unable to update. Child not found by ID: " + id);
@@ -67,12 +59,10 @@ public class UserService {
         childRepository.save(update);
     }
 
-    public void deleteAdmin(String id) {
-        adminRepository.deleteById(id);
+    public void deleteUser(String id) {
+        userRepository.deleteById(id);
     }
-    public void deleteParent(String id) {
-        parentRepository.deleteById(id);
-    }
+
     public void deleteChild(String id) {
         childRepository.deleteById(id);
     }

@@ -1,4 +1,4 @@
-package nl.mattworld.user;
+package nl.mattworld.user.child;
 
 import org.springframework.data.repository.CrudRepository;
 
