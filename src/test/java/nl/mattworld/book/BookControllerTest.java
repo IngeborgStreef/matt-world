@@ -32,15 +32,27 @@ public class BookControllerTest {
 
     @Test
     public void createBook() throws Exception {
-        Book book = new Book();
-        book.setTitle("Egypt");
-        when(bookService.createBook(book)).thenReturn(book);
+        BookDto book = new BookDto(null, 1, "Egypt", "http://matt-world.nl/images/egypt.jpg", "Egypt summary");
+        when(bookService.createBook(book.toEntity())).thenReturn(book.toEntity());
         this.mockMvc.perform(post("/api/books")
                 .content(objectMapper.writeValueAsString(book))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value("Egypt"));
+                .andExpect(jsonPath("$.title").value(book.getTitle()))
+                .andExpect(jsonPath("$.imageUrl").value(book.getImageUrl()))
+                .andExpect(jsonPath("$.summary").value(book.getSummary()));
+    }
+
+    @Test
+    public void createBookBadRequestMissingTitle() throws Exception {
+        BookDto book = new BookDto(null, 1, null, "http://matt-world.nl/images/egypt.jpg", "Egypt summary");
+        when(bookService.createBook(book.toEntity())).thenReturn(book.toEntity());
+        this.mockMvc.perform(post("/api/books")
+                .content(objectMapper.writeValueAsString(book))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -65,16 +77,14 @@ public class BookControllerTest {
 
     @Test
     public void updateBookById() throws Exception {
-        Book book = new Book();
-        book.setId("1");
-        book.setLevel(1);
+        BookDto book = new BookDto(null, 1, "Egypt", "http://matt-world.nl/images/egypt.jpg", "Egypt summary");
 
         this.mockMvc.perform(put("/api/books/1")
                 .content(objectMapper.writeValueAsString( book))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
-        verify(bookService).updateBook("1", book);
+        verify(bookService).updateBook("1", book.toEntity());
     }
 
 }

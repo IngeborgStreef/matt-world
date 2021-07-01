@@ -25,13 +25,13 @@ public class BookServiceIT {
         one.setLevel(2);
         one.setTitle("Jagers en verzamelaars");
         one.setImageUrl("hierkomteenplaatjevanjagersenverzamelaars");
-        one.setSummery("summery");
+        one.setSummary("summary");
         repository.save(one);
         Book two = new Book();
         two.setLevel(3);
         two.setTitle("De gouden Eeuw");
         two.setImageUrl("plaatje");
-        two.setSummery("summery");
+        two.setSummary("summary");
         repository.save(two);
         List<Book> books = service.retrieveBooks();
         assertEquals(2,books.size());
@@ -43,7 +43,7 @@ public class BookServiceIT {
         book.setLevel(1);
         book.setTitle("Egypt");
         book.setImageUrl("hierkomteenplaatjevanegypte");
-        book.setSummery("summery");
+        book.setSummary("summary");
         Book created = repository.save(book);
         Optional<Book> found = service.findBookById(created.getId());
         assertTrue(found.isPresent());

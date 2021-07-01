@@ -6,12 +6,19 @@ info:
 host: "matt-world.nl"
 basePath: "/api"
 
+tags:
+  - name: "book"
+  - name: "user"
+
+
 schemes:
   - "https"
   - "http"
 paths:
   /books:
     post:
+      tags:
+        - "book"
       summary: "Add a new book"
       operationId: "createBook"
       consumes:
@@ -31,7 +38,9 @@ paths:
           schema:
             $ref: "#/definitions/Book"
     get:
-      summary: "Read all book summaries"
+      tags:
+        - "book"
+      summary: "Read all books"
       operationId: "getAllBooks"
       produces:
         - "application/json"
@@ -44,6 +53,8 @@ paths:
           description: "OK"
   /books/{id}:
     get:
+      tags:
+        - "book"
       summary: "Get a single book"
       operationId: "getBook"
       parameters:
@@ -61,6 +72,8 @@ paths:
         "404":
           description: "Book not found"
     put:
+      tags:
+        - "book"
       summary: "Update a book"
       operationId: "updateBook"
       parameters:
@@ -84,13 +97,15 @@ paths:
           description: "Bad request"
         "404":
           description: "Book not found"
-  /books/{id}/pages:
+  /books/{bookId}/pages:
     get:
+      tags:
+        - "book"
       summary: "Get a book's pages"
       operationId: "getBookPages"
       parameters:
         - in: "path"
-          name: "id"
+          name: "bookId"
           required: true
           type: "string"
       produces:
@@ -105,6 +120,8 @@ paths:
         "404":
           description: "Book not found"
     post:
+      tags:
+        - "book"
       summary: "Create bookpage"
       operationId: "createBookPage"
       consumes:
@@ -113,7 +130,7 @@ paths:
         - "application/json"
       parameters:
         - in: "path"
-          name: "id"
+          name: "bookId"
           required: true
           type: "string"
         - in: "body"
@@ -128,13 +145,15 @@ paths:
           schema:
             $ref: "#/definitions/Page"
 
-  /books/{id}/pages/{pageId}:
+  /books/{bookId}/pages/{pageId}:
     get:
+      tags:
+        - "book"
       summary: "Get single page"
       operationId: "getPage"
       parameters:
         - in: "path"
-          name: "id"
+          name: "bookId"
           required: true
           type: "string"
         - in: "path"
@@ -150,11 +169,63 @@ paths:
           description: "OK"
         "404":
           description: "Book or Page not found"
-
+    put:
+      tags:
+        - "book"
+      summary: "Update page"
+      operationId: "updatePage"
+      parameters:
+        - in: "path"
+          name: "bookId"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "pageId"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          required: true
+          schema:
+            $ref: "#/definitions/Page"
+      produces:
+        - "application/json"
+      consumes:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Book or Page not found"
+        "400":
+          description: "Bad Request"
+    delete:
+      tags:
+        - "book"
+      summary: "Delete page"
+      operationId: "deletePage"
+      parameters:
+        - in: "path"
+          name: "bookId"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "pageId"
+          required: true
+          type: "string"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Book or Page not found"
   /books/{id}/page/{pageNumber}:
     get:
+      tags:
+        - "book"
       summary: "Get single page"
-      operationId: "getPage"
+      operationId: "getPageByBookIdAndNumber"
       parameters:
         - in: "path"
           name: "id"
@@ -174,8 +245,317 @@ paths:
         "404":
           description: "Book or Page not found"
 
+  /users/parents:
+    post:
+      tags:
+        - "user"
+      summary: "Register a parent"
+      operationId: "registerParent"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "parent"
+          required: true
+          schema:
+            $ref: "#/definitions/Parent"
+      responses:
+        "200":
+          schema:
+            $ref: "#/definitions/Parent"
+          description: "OK"
+        "400":
+          description: "Bad Request"
+    get:
+      tags:
+        - "user"
+      summary: "Retrieve all parents"
+      operationId: "getParents"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Parent"
+          description: "OK"
+
+  /users/parents/{id}:
+    get:
+      tags:
+        - "user"
+      summary: "Retrieve a single parent"
+      operationId: "getParent"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Parent"
+        "404":
+          description: "Parent user not found"
+    put:
+      tags:
+        - "user"
+      summary: "Update a parent"
+      operationId: "updateParent"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "user"
+          required: true
+          schema:
+            $ref: "#/definitions/Parent"
+      consumes:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Parent user not found"
+    delete:
+      tags:
+        - "user"
+      summary: "Delete a parent"
+      operationId: "deleteParent"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Parent user not found"
 
 
+  /users/parents/{parentId}/children:
+    post:
+      tags:
+        - "user"
+      summary: "Register a child"
+      operationId: "registerChild"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "parentId"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "child"
+          required: true
+          schema:
+            $ref: "#/definitions/Child"
+      responses:
+        "200":
+          schema:
+            $ref: "#/definitions/Child"
+          description: "OK"
+        "404":
+          description: "Parent not found"
+    get:
+      tags:
+        - "user"
+      summary: "Retrieve all children for a parent"
+      operationId: "getChildren"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "path"
+          name: "parentId"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Child"
+          description: "OK"
+        "404":
+          description: "Parent not found"
+  /users/parents/{parentId}/children/{childId}:
+    get:
+      tags:
+        - "user"
+      summary: "Retrieve a single child for a parent"
+      operationId: "getChild"
+      parameters:
+        - in: "path"
+          name: "parentId"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "childId"
+          required: true
+          type: "string"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Child"
+        "404":
+          description: "Parent user or child not found"
+    put:
+      tags:
+        - "user"
+      summary: "Update child"
+      operationId: "updateChild"
+      parameters:
+        - in: "path"
+          name: "parentId"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "childId"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "user"
+          required: true
+          schema:
+            $ref: "#/definitions/Child"
+      consumes:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Parent user or child not found"
+    delete:
+      tags:
+        - "user"
+      summary: "Delete a child"
+      operationId: "deleteChild"
+      parameters:
+        - in: "path"
+          name: "parentId"
+          required: true
+          type: "string"
+        - in: "path"
+          name: "childId"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Parent user or child not found"
+
+
+  /users/admins:
+    post:
+      tags:
+        - "user"
+      summary: "Register admin"
+      operationId: "registerAdmin"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "admin"
+          required: true
+          schema:
+            $ref: "#/definitions/Admin"
+      responses:
+        "200":
+          schema:
+            $ref: "#/definitions/Admin"
+          description: "OK"
+        "400":
+          description: "Bad Request"
+    get:
+      tags:
+        - "user"
+      summary: "Retrieve all admins"
+      operationId: "getAllAdmins"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Admin"
+          description: "OK"
+
+  /users/admins/{id}:
+    get:
+      tags:
+        - "user"
+      summary: "Retrieve single admin"
+      operationId: "getAdmin"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+      produces:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+          schema:
+            $ref: "#/definitions/Admin"
+        "404":
+          description: "Admin user not found"
+    put:
+      tags:
+        - "user"
+      summary: "Update admin"
+      operationId: "updateAdmin"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "user"
+          required: true
+          schema:
+            $ref: "#/definitions/Admin"
+      consumes:
+        - "application/json"
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Admin user not found"
+    delete:
+      tags:
+        - "user"
+      summary: "Delete an Admin"
+      operationId: "deleteAdmin"
+      parameters:
+        - in: "path"
+          name: "id"
+          required: true
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+        "404":
+          description: "Admin user not found"
 
 
 definitions:
@@ -186,15 +566,28 @@ definitions:
         type: "string"
       level:
         type: "integer"
-        format: "int64"
+      title:
+        type: "string"
+      imageUrl:
+        type: "string"
+      summary:
+        type: "string"
   Page:
     type: "object"
     properties:
       id:
         type: "string"
-      pageNumber:
+      number:
         type: "integer"
-  User:
+      bookId:
+        type: "string"
+      title:
+        type: "string"
+      text:
+        type: "string"
+      imageUrl:
+        type: "string"
+  Parent:
     type: "object"
     properties:
       id:
@@ -202,6 +595,34 @@ definitions:
       name:
         type: "string"
       email:
+        type: "string"
+      password:
+        type: "string"
+      avatarUrl:
+        type: "string"
+  Child:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      parentId:
+        type: "string"
+      name:
+        type: "string"
+      dateOfBirth:
+        type: "string"
+        format: "date"
+      avatarUrl:
+        type: "string"
+
+  Admin:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      name:
+        type: "string"
+      avatarUrl:
         type: "string"
       password:
         type: "string"
