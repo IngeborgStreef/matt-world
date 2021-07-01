@@ -17,6 +17,10 @@ public class BookDto {
     @NotBlank
     String summary;
 
+    public static BookDto fromEntity(Book book) {
+        return new BookDto(book.getId(), book.getLevel(), book.getTitle(), book.getImageUrl(), book.getSummary());
+    }
+
     public Book toEntity() {
         Book book = new Book();
         book.setId(id);
@@ -25,10 +29,6 @@ public class BookDto {
         book.setImageUrl(imageUrl);
         book.setSummary(summary);
         return book;
-    }
-
-    public static BookDto fromEntity(Book book) {
-        return new BookDto(book.getId(), book.getLevel(), book.getTitle(), book.getImageUrl(), book.getSummary());
     }
 
 }

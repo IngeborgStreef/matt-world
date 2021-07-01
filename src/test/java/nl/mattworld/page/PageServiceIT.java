@@ -1,5 +1,7 @@
 package nl.mattworld.page;
 
+import nl.mattworld.book.Book;
+import nl.mattworld.book.BookRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +14,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class PageServiceIT {
+
+    @Autowired
+    private BookRepository bookRepository;
 
     @Autowired
     private PageRepository repository;
@@ -41,11 +46,14 @@ public class PageServiceIT {
 
     @Test
     public void canFindPageByBookIdAndNumber() {
+        Book book = new Book();
+        book.setId("1");
+        bookRepository.save(book);
         Page page = new Page();
-        page.setBookId("1");
+        page.setBook(book);
         page.setNumber(2);
         Page created = repository.save(page);
-        Optional<Page> found = service.findPageByBookIdAndNumber(created.getBookId(), created.getNumber());
+        Optional<Page> found = service.findPageByBookIdAndNumber(book.getId(), created.getNumber());
         assertTrue(found.isPresent());
         assertEquals(created, found.get());
     }

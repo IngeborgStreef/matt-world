@@ -1,5 +1,6 @@
 package nl.mattworld.page;
 
+import nl.mattworld.book.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,15 +58,16 @@ public class PageServiceTest {
 
     @Test
     public void canFindPageByBookIdAndNumber() {
-        String bookId = "1";
+        Book book = new Book();
+        book.setId("1");
         int number = 1;
         Page page = new Page();
-        page.setBookId(bookId);
+        page.setBook(book);
         page.setNumber(number);
-        when(repositoryMock.findOneByBookIdAndNumber(bookId, number)).thenReturn(Optional.of(page));
-        Optional<Page> pageOptional = service.findPageByBookIdAndNumber(bookId, number);
+        when(repositoryMock.findOneByBookIdAndNumber(book.getId(), number)).thenReturn(Optional.of(page));
+        Optional<Page> pageOptional = service.findPageByBookIdAndNumber(book.getId(), number);
         assertTrue(pageOptional.isPresent());
-        assertEquals(bookId, pageOptional.get().getBookId());
+        assertEquals(book, pageOptional.get().getBook());
         assertEquals(number, pageOptional.get().getNumber());
     }
 

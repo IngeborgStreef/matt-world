@@ -1,26 +1,23 @@
 package nl.mattworld.page;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import nl.mattworld.exceptions.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class PageService {
     private final PageRepository repository;
-
-    @Autowired
-    public PageService(PageRepository repository) {
-        this.repository = repository;
-    }
 
     //todo: check if this function is still needed
     public List<Page> retrievePages() {
         return repository.findAll();
     }
 
-    public List<Page> listPagesPerBook(String bookId) {
+    public List<Page> retrievePagesPerBook(String bookId) {
         return repository.findAllByBookId(bookId);
     }
 
@@ -34,6 +31,18 @@ public class PageService {
 
     public Page createPage(Page page) {
         return repository.save(page);
+    }
+
+    public void updatePage(String id, Page update) {
+        if (!repository.existsById(id)) {
+            throw new NotFoundException("Unable to update. Page not found by ID: " + id);
+        }
+        update.setId(id);
+        repository.save(update);
+    }
+
+    public void deletePage(String id) {
+        repository.deleteById(id);
     }
 
 }

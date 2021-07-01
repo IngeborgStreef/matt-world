@@ -3,7 +3,9 @@ package nl.mattworld.page;
 import nl.mattworld.exceptions.NotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class PageController {
@@ -15,24 +17,33 @@ public class PageController {
     }
 
     @PostMapping("/api/pages")
-    public Page createPage(@RequestBody Page page) {
-        return pageService.createPage(page);
+    public PageDto createPage(@RequestBody @Valid PageDto page) {
+        return PageDto.fromEntity(pageService.createPage(page.toEntity()));
     }
 
     @GetMapping("/api/books/{bookId}/pages")
-    public List<Page> getAllPages(@PathVariable String bookId) {
-        return pageService.listPagesPerBook(bookId);
+    public List<PageDto> getAllPages(@PathVariable String bookId) {
+        return pageService.retrievePagesPerBook(bookId).stream().map(PageDto::fromEntity).collect(Collectors.toList());
     }
 
     @GetMapping("/api/books/{bookId}/pages/{pageId}")
-    public Page getPage(@PathVariable String pageId) {
-        return pageService.findPageById(pageId).orElseThrow(() ->new NotFoundException("Page not found by ID: " + pageId));
+    public PageDto getPage(@PathVariable String pageId) {
+        return pageService.findPageById(pageId).map(PageDto::fromEntity).orElseThrow(() ->new NotFoundException("Page not found by ID: " + pageId));
     }
 
-    //todo: maken number --> booknumber
+    @PutMapping("/api/books/{bookId}/pages/{pageId}")
+    public void updatePage(@PathVariable String pageId, @RequestBody @Valid PageDto update) {
+        pageService.updatePage(pageId, update.toEntity());
+    }
+
+    @DeleteMapping("/api/books/{bookId}/pages/{pageId}")
+    public void deletePage(@PathVariable String pageId) {
+        pageService.deletePage(pageId);
+    }
+
     @GetMapping("/api/books/{bookId}/page/{pageNumber}")
-    public Page getPageByBookIdAndNumber(@PathVariable String bookId, @PathVariable int pageNumber) {
-        return pageService.findPageByBookIdAndNumber(bookId, pageNumber).orElseThrow(() -> new NotFoundException("Book not found by bookid: " + bookId + "or page not found by pagenumber: " + pageNumber));
+    public PageDto getPageByBookIdAndNumber(@PathVariable String bookId, @PathVariable int pageNumber) {
+        return pageService.findPageByBookIdAndNumber(bookId, pageNumber).map(PageDto::fromEntity).orElseThrow(() -> new NotFoundException("Book not found by bookid: " + bookId + "or page not found by pagenumber: " + pageNumber));
     }
 
 }
