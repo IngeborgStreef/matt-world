@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 @Data
 @Entity
+@Table (name = "CHILDREN")
 public class Child {
 
     @Id

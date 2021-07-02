@@ -2,6 +2,7 @@ package nl.mattworld.page;
 
 import nl.mattworld.book.Book;
 import nl.mattworld.book.BookRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +24,11 @@ public class PageServiceIT {
 
     @Autowired
     private PageService service;
+
+    @BeforeEach
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 
     @Test
     public void canListPages() {
@@ -46,9 +52,7 @@ public class PageServiceIT {
 
     @Test
     public void canFindPageByBookIdAndNumber() {
-        Book book = new Book();
-        book.setId("1");
-        bookRepository.save(book);
+        Book book = bookRepository.save(new Book());
         Page page = new Page();
         page.setBook(book);
         page.setNumber(2);

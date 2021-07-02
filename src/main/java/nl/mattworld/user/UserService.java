@@ -67,4 +67,7 @@ public class UserService {
         childRepository.deleteById(id);
     }
 
+    public Child createChild(Child child) {
+        return childRepository.save(child);
+    }
 }

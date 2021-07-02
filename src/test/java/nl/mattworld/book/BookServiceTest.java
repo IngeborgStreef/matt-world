@@ -23,7 +23,7 @@ public class BookServiceTest {
 
     @BeforeEach
     public void setup() {
-        service= new BookService(repositoryMock);
+        service = new BookService(repositoryMock);
     }
 
     @Test
