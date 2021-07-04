@@ -16,7 +16,7 @@ public class PageController {
         this.pageService = pageService;
     }
 
-    @PostMapping("/api/pages")
+    @PostMapping("/api/books/{bookId}/pages")
     public PageDto createPage(@RequestBody @Valid PageDto page) {
         return PageDto.fromEntity(pageService.createPage(page.toEntity()));
     }

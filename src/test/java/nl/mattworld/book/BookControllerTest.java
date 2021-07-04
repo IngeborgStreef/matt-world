@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class BookControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @WithMockUser(username = "matt", roles = "ADMIN")
     @Test
     public void createBook() throws Exception {
         BookDto book = new BookDto(null, 1, "Egypt", "http://matt-world.nl/images/egypt.jpg", "Egypt summary");
@@ -44,6 +46,7 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$.summary").value(book.getSummary()));
     }
 
+    @WithMockUser(username = "matt", roles = "ADMIN")
     @Test
     public void createBookBadRequestMissingTitle() throws Exception {
         BookDto book = new BookDto(null, 1, null, "http://matt-world.nl/images/egypt.jpg", "Egypt summary");
@@ -55,6 +58,7 @@ public class BookControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @WithMockUser(username = "matt", roles = "ADMIN")
     @Test
     public void getAllBooks() throws Exception {
         when(bookService.retrieveBooks()).thenReturn(List.of(new Book(), new Book()));
@@ -64,6 +68,7 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$").isArray());
     }
 
+    @WithMockUser(username = "matt", roles = "ADMIN")
     @Test
     public void getBookById() throws Exception {
         Book book = new Book();
@@ -75,6 +80,7 @@ public class BookControllerTest {
                 .andExpect(jsonPath("$.id").value("1"));
     }
 
+    @WithMockUser(username = "matt", roles = "ADMIN")
     @Test
     public void updateBookById() throws Exception {
         BookDto book = new BookDto(null, 1, "Egypt", "http://matt-world.nl/images/egypt.jpg", "Egypt summary");

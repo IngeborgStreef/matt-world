@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -31,11 +32,12 @@ public class PageControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @WithMockUser(username = "matt", roles = "ADMIN")
     @Test
     public void createPage() throws Exception {
         PageDto page = new PageDto(null, "1", "Egypt", "Lorum", 2, "http://matt-world/pages/egypt");
         when(pageService.createPage(page.toEntity())).thenReturn(page.toEntity());
-        this.mockMvc.perform(post("/api/pages")
+        this.mockMvc.perform(post("/api/books/1/pages")
                 .content(objectMapper.writeValueAsString(page))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -44,6 +46,7 @@ public class PageControllerTest {
                 .andExpect(jsonPath("$.imageUrl").value(page.getImageUrl()));
     }
 
+    @WithMockUser(username = "matt", roles = "ADMIN")
     @Test
     public void getAllPages() throws Exception {
         PageDto page = new PageDto(null, "book_id", "Egypt", "Lorum", 2, "http://matt-world/pages/egypt");
@@ -55,6 +58,7 @@ public class PageControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)));
     }
 
+    @WithMockUser(username = "matt", roles = "ADMIN")
     @Test
     public void getPageById() throws Exception {
         Page page = new Page();
@@ -67,6 +71,7 @@ public class PageControllerTest {
                 .andExpect(jsonPath("$.id").value("1"));
     }
 
+    @WithMockUser(username = "matt", roles = "ADMIN")
     @Test
     public void getPageByBookIdAndNumber() throws Exception {
         Page page = new Page();
@@ -79,6 +84,7 @@ public class PageControllerTest {
                 .andExpect(jsonPath("$.id").value("1"));
     }
 
+    @WithMockUser(username = "matt", roles = "ADMIN")
     @Test
     public void updatePage() throws Exception {
         PageDto page = new PageDto(null, "1", "Egypt", "This is about Egypt", 1, "http://matt-world.nl/images/egypt.jpg");
@@ -90,6 +96,7 @@ public class PageControllerTest {
         verify(pageService).updatePage("1", page.toEntity());
     }
 
+    @WithMockUser(username = "matt", roles = "ADMIN")
     @Test
     public void deletePage() throws Exception {
         this.mockMvc.perform(delete("/api/books/book_id/pages/1"))
