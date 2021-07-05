@@ -2,11 +2,16 @@ package nl.mattworld.user;
 
 import lombok.Value;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 @Value
 public class UserDto {
 
     String id;
+    @NotBlank
     String name;
+    @Email
     String email;
     String password;
     String avatarUrl;
@@ -24,6 +29,6 @@ public class UserDto {
     }
 
     public static UserDto fromEntity(User entity) {
-        return new UserDto(entity.getId(), entity.getName(), entity.getEmail(), entity.getPassword(), entity.getAvatarUrl(), entity.getRole());
+        return new UserDto(entity.getId(), entity.getName(), entity.getEmail(), null, entity.getAvatarUrl(), entity.getRole());
     }
 }

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,10 +24,12 @@ public class UserServiceTest {
     private UserService userService;
     @Mock
     private ChildRepository childRepositoryMock;
+    @Mock
+    private PasswordEncoder passwordEncoderMock;
 
     @BeforeEach
     public void setup() {
-        userService = new UserService(userRepositoryMock, childRepositoryMock);
+        userService = new UserService(userRepositoryMock, childRepositoryMock, passwordEncoderMock);
     }
 
     @Test
@@ -125,6 +128,16 @@ public class UserServiceTest {
         child.setId("1");
         userService.deleteChild(child.getId());
         verify(childRepositoryMock).deleteById(child.getId());
+    }
+
+    @Test
+    public void canFindByEmail() {
+        User user = new User();
+        user.setName("Matt");
+        when(userRepositoryMock.findByEmail(any())).thenReturn(Optional.of(user));
+        Optional<User> found = userService.findByEmail("matt@matt-world.nl");
+        assertTrue(found.isPresent());
+        assertEquals("Matt", found.get().getName());
     }
 
 }

@@ -2,7 +2,7 @@ package nl.mattworld.user;
 
 import nl.mattworld.user.child.Child;
 import nl.mattworld.user.child.ChildRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +23,7 @@ public class UserServiceIT {
     @Autowired
     private UserService userService;
 
-    @BeforeEach
+    @AfterEach
     public void deleteAll() {
         childRepository.deleteAll();
         userRepository.deleteAll();
@@ -31,15 +31,22 @@ public class UserServiceIT {
 
     @Test
     public void canCreateUser() {
+        String password = "I.II.III.IV.V";
         User user = new User();
+        user.setPassword(password);
         User created = userService.createUser(user);
         User found = userRepository.findById(created.getId()).orElseThrow();
         assertEquals(created, found);
+        assertNotEquals(password, found.getPassword());
     }
+
     @Test
     public void canCreateChild() {
         Child child = new Child();
-        Child created = userService.createChild(child);
+        User user = new User();
+        user.setRole(User.Role.USER);
+        User createdUser = userRepository.save(user);
+        Child created = userService.createChild(createdUser.getId(), child);
         Child found = childRepository.findById(created.getId()).orElseThrow();
         assertEquals(created, found);
     }
@@ -53,6 +60,7 @@ public class UserServiceIT {
         assertTrue(found.isPresent());
         assertEquals(created, found.get());
     }
+
     @Test
     public void canFindChildById() {
         Child child = new Child();
@@ -72,6 +80,7 @@ public class UserServiceIT {
         List<User> users = userService.retrieveAll();
         assertEquals(2, users.size());
     }
+
     @Test
     public void canListChildrenFromParent() {
         User user = new User();
@@ -89,30 +98,31 @@ public class UserServiceIT {
 
     @Test
     public void canUpdateUser() {
-        User user = userService.createUser(new User());
-        user.setName("piet");
+        User user = userRepository.save(new User());
+        user.setName("lucius");
         User created = userRepository.save(user);
         User update = new User();
         update.setId(created.getId());
-        update.setName("henk");
+        update.setName("nero");
         userService.updateUser(created.getId(), update);
         User result = userRepository.findById(created.getId()).orElseThrow();
-        assertEquals("henk", result.getName());
+        assertEquals("nero", result.getName());
     }
+
     @Test
     public void canUpdateChild() {
-        User parent = userService.createUser(new User());
+        User parent = userRepository.save(new User());
         Child child = new Child();
-        child.setName("piet");
+        child.setName("luchius");
         child.setParent(parent);
         Child created = childRepository.save(child);
         Child update = new Child();
         update.setId(created.getId());
         update.setParent(child.getParent());
-        update.setName("henk");
-        userService.updateChild(created.getId(),update);
+        update.setName("nero");
+        userService.updateChild(created.getId(), update);
         Child result = childRepository.findById(created.getId()).orElseThrow();
-        assertEquals("henk",result.getName());
+        assertEquals("nero", result.getName());
     }
 
     @Test

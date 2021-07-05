@@ -17,6 +17,7 @@ public class Child {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String name;
+    private String avatarUrl;
     private LocalDate dateOfBirth;
     @ManyToOne(fetch = FetchType.LAZY)
     private User parent;

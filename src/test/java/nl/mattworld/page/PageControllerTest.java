@@ -1,11 +1,13 @@
 package nl.mattworld.page;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nl.mattworld.security.JwtService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,6 +33,12 @@ public class PageControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    //needed for security to work
+    @MockBean
+    private UserDetailsService userDetailsServiceMock;
+    @MockBean
+    private JwtService jwtServiceMock;
 
     @WithMockUser(username = "matt", roles = "ADMIN")
     @Test

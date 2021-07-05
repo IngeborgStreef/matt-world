@@ -2,7 +2,7 @@ package nl.mattworld.page;
 
 import nl.mattworld.book.Book;
 import nl.mattworld.book.BookRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,9 +25,10 @@ public class PageServiceIT {
     @Autowired
     private PageService service;
 
-    @BeforeEach
+    @AfterEach
     public void deleteAll() {
         repository.deleteAll();
+        bookRepository.deleteAll();
     }
 
     @Test

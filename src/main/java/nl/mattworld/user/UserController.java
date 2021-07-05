@@ -17,6 +17,16 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PostMapping("/api/users")
+    public UserDto createUser( @RequestBody @Valid UserDto user) {
+        return UserDto.fromEntity(userService.createUser(user.toEntity()));
+    }
+
+    @PostMapping("/api/users/{userId}/children")
+    public ChildDto createChild(@PathVariable String userId, @RequestBody @Valid ChildDto child) {
+        return ChildDto.fromEntity(userService.createChild(userId, child.toEntity()));
+    }
+
     @GetMapping("/api/users/{userId}")
     public UserDto getUser(@PathVariable String userId) {
         return userService.findById(userId).map(UserDto::fromEntity).orElseThrow(() -> new NotFoundException("User not found by ID: " + userId));

@@ -10,6 +10,7 @@ public class ChildDto {
     String id;
     String name;
     LocalDate dateOfBirth;
+    String avatarUrl;
     String parentId;
 
     public Child toEntity() {
@@ -19,6 +20,7 @@ public class ChildDto {
         child.setId(id);
         child.setName(name);
         child.setDateOfBirth(dateOfBirth);
+        child.setAvatarUrl(avatarUrl);
         child.setParent(parent);
         return child;
     }
@@ -27,6 +29,6 @@ public class ChildDto {
         String parentId = null;
         if (entity.getParent() != null)
             parentId = entity.getParent().getId();
-        return new ChildDto(entity.getId(), entity.getName(), entity.getDateOfBirth(), parentId);
+        return new ChildDto(entity.getId(), entity.getName(), entity.getDateOfBirth(), entity.getAvatarUrl(), parentId);
     }
 }
